@@ -30,7 +30,7 @@ function uploadFile(uptoken, key, localFile, callback) {
 
 var downloadUrl = function(key, domain) {
     let policy = new qiniu.rs.GetPolicy();
-    let url = 'http://' + domain + '/' + key;
+    let url = 'http://' + domain + '/' + encodeURI(key);
     // let dl = policy.makeRequest(url);
     return url;
 }
