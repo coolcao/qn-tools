@@ -10,7 +10,7 @@
 
 ## 界面
 
-![文件上传](http://7xt3oh.com2.z0.glb.clouddn.com/blog/qn-tools.png)
+![文件上传](app/public/img/qn-tools.png)
 
 上传界面，分3部分，目录导航，文件选择区域，文件预览区域。
 
@@ -18,4 +18,4 @@
 
 文件预览区域，现在只限图片预览，以后会继续添加。
 
-![图片2](http://7xt3oh.com2.z0.glb.clouddn.com/blog/qn-tools2.png)
+![图片2](app/public/img/qn-tools2.png)
