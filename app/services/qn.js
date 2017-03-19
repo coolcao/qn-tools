@@ -1,14 +1,6 @@
 const qiniu = require('qiniu');
 const QiniuConfig = require('../modules/QiniuConfig.js');
 
-//七牛設置
-const access_key = 'c53lCfUnng5hK1S8fH8bkkat_f_kI4qSFbrWVy2b';
-const secret_key = 't2k8W5gtb5l5oH0F0HJ-DDRRbxuCi8BFPFUDQqyG';
-
-
-qiniu.conf.ACCESS_KEY = access_key;
-qiniu.conf.SECRET_KEY = secret_key;
-
 //构建上传策略函数
 function uptoken(bucket, key) {
     var putPolicy = new qiniu.rs.PutPolicy(bucket + ":" + key);
@@ -21,11 +13,18 @@ function uptoken(bucket, key) {
 }
 
 //构造上传函数
-function uploadFile(uptoken, key, localFile, callback) {
+function uploadFile(uptoken, key, localFile) {
     var extra = new qiniu.io.PutExtra();
-    qiniu.io.putFile(uptoken, key, localFile, extra, function(err, ret) {
-        callback(err, ret);
+    return new Promise((resolve,reject) => {
+        qiniu.io.putFile(uptoken, key, localFile, extra, function(err, ret) {
+            if(err){
+                reject(err);
+            }else{
+                resolve(ret);
+            }
+        });
     });
+
 }
 
 var downloadUrl = function(key, domain) {
@@ -35,30 +34,39 @@ var downloadUrl = function(key, domain) {
     return url;
 }
 
-var upload = function(form, callback) {
-    let bucket = form.bucket;
-    let ak = form.ak;
-    let sk = form.sk;
-    let file_path = form.file_path;
-    let domain = form.domain;
-    let md = form.md;
-    let file_name = file_path.split('/').slice(-1)[0];
-    if (md) {
-        file_name = md + '/' + file_name;
+class QNTool {
+    constructor(ak,sk,bucket,domain){
+        this.ak = ak;
+        this.sk = sk;
+        this.bucket = bucket;
+        this.domain = domain;
+        qiniu.conf.ACCESS_KEY = ak;
+        qiniu.conf.SECRET_KEY = sk;
     }
-    uploadFile(uptoken(bucket, file_name), file_name, file_path, (err,
-        result) => {
-        if (err) {
-            callback(err);
-        } else {
-            let _dl = downloadUrl(result.key, domain);
-            callback(err, {
-                downloadUrl: _dl
-            });
+
+    /**
+    * file_path:文件本地路径
+    * md:类别，其实就是文件名前缀而已
+    */
+    upload(file_path,md){
+
+        let bucket = this.bucket;
+        let ak = this.ak;
+        let sk = this.sk;
+        let domain = this.domain;
+        let file_name = file_path.split('/').slice(-1)[0];
+        if (md) {
+            file_name = md + '/' + file_name;
         }
-    });
+
+        return uploadFile(uptoken(bucket,file_name),file_name,file_path).then(result => {
+            let _dl = downloadUrl(result.key, domain);
+            return {downloadUrl:_dl};
+        })
+
+    }
 }
 
-module.exports = {
-    upload
-};
+
+
+module.exports = QNTool;

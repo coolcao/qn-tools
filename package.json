@@ -1,26 +1,31 @@
 {
-    "name": "qn-tools",
-    "version": "0.0.1",
-    "description": "qiniu tools",
-    "main": "app/main.js",
-    "scripts": {
-        "start": "electron main.js"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/coolcao/qn-tools.git"
-    },
-    "keywords": [
-        "qiniu"
-    ],
-    "author": "coolcao",
-    "license": "MIT",
-    "bugs": {
-        "url": "https://github.com/coolcao/qn-tools/issues"
-    },
-    "homepage": "https://github.com/coolcao/qn-tools#readme",
-    "devDependencies": {
-        "electron-prebuilt": "^1.0.1",
-        "qiniu": "*"
-    }
+  "name": "qn-tools",
+  "version": "0.0.1",
+  "description": "qiniu tools",
+  "main": "app/main.js",
+  "scripts": {
+    "start": "electron main.js",
+    "build": "electron-packager ./app qn-tools --platform darwin --arch x64     --out ./OutApp --version 0.37.3 --overwrite "
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coolcao/qn-tools.git"
+  },
+  "keywords": [
+    "qiniu"
+  ],
+  "author": "coolcao",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/coolcao/qn-tools/issues"
+  },
+  "homepage": "https://github.com/coolcao/qn-tools#readme",
+  "devDependencies": {
+    "electron-prebuilt": "^1.0.1",
+    "qiniu": "*"
+  },
+  "dependencies": {
+    "electron-packager": "^8.3.0",
+    "electron-prebuilt": "^1.4.10"
+  }
 }

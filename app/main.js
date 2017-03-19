@@ -7,7 +7,7 @@ const BrowserWindow = electron.BrowserWindow;
 
 //引入node模塊
 const fs = require('fs');
-const qiniu = require('./services/qn');
+const QNTool = require('./services/qn');
 
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -22,10 +22,21 @@ function createWindow() {
     })
 
     // and load the index.html of the app.
-    mainWindow.loadURL(`file://${__dirname}/index.html`)
+    mainWindow.loadURL(`file://${__dirname}/public/index.html`)
+
+    const ses = mainWindow.webContents.session;
+    ses.cookies.set({url:'http://coolcao.com/qn-tools',name:'name',value:'coolcao'},(err)=>{
+        if(err){
+            console.log(err);
+        }
+        ses.cookies.get({url:'http://coolcao.com/qn-tools'},(err,cookies)=>{
+        console.log(cookies);
+    });
+    });
+
 
     // Open the DevTools.
-    // mainWindow.webContents.openDevTools()
+    // mainWindow.webContents.openDevTools();
 
     // Emitted when the window is closed.
     mainWindow.on('closed', function() {
@@ -40,17 +51,46 @@ ipcMain.on('upload', (event, form) => {
     if (!form) {
         return event.sender.send('uploaded', {
             ret: 500,
-            msg: '文件爲空'
+            msg: '文件为空'
         });
     }
-    qiniu.upload(form, (err, result) => {
-        if (err) console.log(err);
-        console.log(result);
-        event.sender.send('uploaded', {
-            ret: 0,
-            downloadUrl: result.downloadUrl
+    let qnTool = new QNTool(form.ak,form.sk,form.bucket,form.domain);
+    console.log(form);
+    qnTool.upload(form.file_path,form.md).then(result => {
+        console.log(`文件上传成功！${result.downloadUrl}`);
+        event.sender.send('uploaded',{
+            ret:0,
+            downloadUrl:result.downloadUrl
         });
     });
+
+});
+
+ipcMain.on('auth',(event,authInfo) => {
+    let qnTool = new QNTool(authInfo.ak,authInfo.sk,authInfo.bucket,authInfo.domain);
+    if(!authInfo){
+        return event.sender.send('authed',{
+            ret:500,
+            msg:'认证失败，auth信息不能为空'
+        });
+    }
+
+    qnTool.upload(`${__dirname}/public/img/a0.jpg`,'auth').then(result => {
+        console.log(result);
+        if(result.downloadUrl){
+            event.sender.send('authed',{
+                ret:0,
+                msg:'auth success'
+            });
+        }
+    }).catch(err => {
+        console.log(err);
+        event.sender.send('authed',{
+            ret:500,
+            msg:err.message || err
+        });
+    });
+
 
 });
 

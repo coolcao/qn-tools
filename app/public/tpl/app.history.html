@@ -1,0 +1,30 @@
+<div class="bg-light lter b-b wrapper-md">
+  <h1 class="m-n font-thin h3">上传历史</h1>
+</div>
+<div class="wrapper-md">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+    上传历史
+    </div>
+    <div class="table-responsive">
+      <table ng-controller="FileHistoryController" ui-jq="dataTable" ui-options="{
+          aaData:{{history}},
+          aoColumns: [
+            { mData: 'filename' },
+            { mData: 'download_url' },
+            { mData: 'update_time' }
+          ]
+        }" class="table table-striped m-b-none">
+        <thead>
+          <tr>
+            <th  style="word-wrap: break-word;" >文件</th>
+            <th  style="word-wrap: break-word;" >下载地址</th>
+            <th  style="word-wrap: break-word;" >更新时间</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
