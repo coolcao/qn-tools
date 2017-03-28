@@ -21,11 +21,11 @@
   },
   "homepage": "https://github.com/coolcao/qn-tools#readme",
   "devDependencies": {
-    "electron-prebuilt": "^1.0.1",
-    "qiniu": "*"
+    "electron-prebuilt": "^1.0.1"
   },
   "dependencies": {
     "electron-packager": "^8.3.0",
-    "electron-prebuilt": "^1.4.10"
+    "electron-prebuilt": "^1.4.10",
+    "qiniu": "*"
   }
 }

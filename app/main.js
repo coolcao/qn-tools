@@ -14,6 +14,58 @@ const QNTool = require('./services/qn');
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
 
+function initMenu() {
+    const Menu = electron.Menu;
+    let template = [{
+        label: "Application",
+        submenu: [{
+            label: "About Application",
+            selector: "orderFrontStandardAboutPanel:"
+        }, {
+            type: "separator"
+        }, {
+            label: "Quit",
+            accelerator: "Command+Q",
+            click: function() {
+                app.quit();
+            }
+        }]
+    }, {
+        label: "Edit",
+        submenu: [{
+            label: "Undo",
+            accelerator: "CmdOrCtrl+Z",
+            selector: "undo:"
+        }, {
+            label: "Redo",
+            accelerator: "Shift+CmdOrCtrl+Z",
+            selector: "redo:"
+        }, {
+            type: "separator"
+        }, {
+            label: "Cut",
+            accelerator: "CmdOrCtrl+X",
+            selector: "cut:"
+        }, {
+            label: "Copy",
+            accelerator: "CmdOrCtrl+C",
+            selector: "copy:"
+        }, {
+            label: "Paste",
+            accelerator: "CmdOrCtrl+V",
+            selector: "paste:"
+        }, {
+            label: "Select All",
+            accelerator: "CmdOrCtrl+A",
+            selector: "selectAll:"
+        }]
+    }];
+
+
+    //注册菜单 
+    Menu.setApplicationMenu(Menu.buildFromTemplate(template));
+}
+
 function createWindow() {
     // Create the browser window.
     mainWindow = new BrowserWindow({
@@ -25,13 +77,19 @@ function createWindow() {
     mainWindow.loadURL(`file://${__dirname}/public/index.html`)
 
     const ses = mainWindow.webContents.session;
-    ses.cookies.set({url:'http://coolcao.com/qn-tools',name:'name',value:'coolcao'},(err)=>{
-        if(err){
+    ses.cookies.set({
+        url: 'http://coolcao.com/qn-tools',
+        name: 'name',
+        value: 'coolcao'
+    }, (err) => {
+        if (err) {
             console.log(err);
         }
-        ses.cookies.get({url:'http://coolcao.com/qn-tools'},(err,cookies)=>{
-        console.log(cookies);
-    });
+        ses.cookies.get({
+            url: 'http://coolcao.com/qn-tools'
+        }, (err, cookies) => {
+            console.log(cookies);
+        });
     });
 
 
@@ -45,7 +103,11 @@ function createWindow() {
         // when you should delete the corresponding element.
         mainWindow = null
     })
+
+    initMenu();
 }
+
+
 
 ipcMain.on('upload', (event, form) => {
     if (!form) {
@@ -54,40 +116,40 @@ ipcMain.on('upload', (event, form) => {
             msg: '文件为空'
         });
     }
-    let qnTool = new QNTool(form.ak,form.sk,form.bucket,form.domain);
+    let qnTool = new QNTool(form.ak, form.sk, form.bucket, form.domain);
     console.log(form);
-    qnTool.upload(form.file_path,form.md).then(result => {
+    qnTool.upload(form.file_path, form.md).then(result => {
         console.log(`文件上传成功！${result.downloadUrl}`);
-        event.sender.send('uploaded',{
-            ret:0,
-            downloadUrl:result.downloadUrl
+        event.sender.send('uploaded', {
+            ret: 0,
+            downloadUrl: result.downloadUrl
         });
     });
 
 });
 
-ipcMain.on('auth',(event,authInfo) => {
-    let qnTool = new QNTool(authInfo.ak,authInfo.sk,authInfo.bucket,authInfo.domain);
-    if(!authInfo){
-        return event.sender.send('authed',{
-            ret:500,
-            msg:'认证失败，auth信息不能为空'
+ipcMain.on('auth', (event, authInfo) => {
+    let qnTool = new QNTool(authInfo.ak, authInfo.sk, authInfo.bucket, authInfo.domain);
+    if (!authInfo) {
+        return event.sender.send('authed', {
+            ret: 500,
+            msg: '认证失败，auth信息不能为空'
         });
     }
 
-    qnTool.upload(`${__dirname}/public/img/a0.jpg`,'auth').then(result => {
+    qnTool.upload(`${__dirname}/public/img/a0.jpg`, 'auth').then(result => {
         console.log(result);
-        if(result.downloadUrl){
-            event.sender.send('authed',{
-                ret:0,
-                msg:'auth success'
+        if (result.downloadUrl) {
+            event.sender.send('authed', {
+                ret: 0,
+                msg: 'auth success'
             });
         }
     }).catch(err => {
         console.log(err);
-        event.sender.send('authed',{
-            ret:500,
-            msg:err.message || err
+        event.sender.send('authed', {
+            ret: 500,
+            msg: err.message || err
         });
     });
 
