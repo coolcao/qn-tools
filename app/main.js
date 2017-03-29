@@ -59,7 +59,35 @@ function initMenu() {
             accelerator: "CmdOrCtrl+A",
             selector: "selectAll:"
         }]
-    }];
+    },{
+    label: 'View',
+    submenu: [
+      {
+        role: 'reload'
+      },
+      {
+        role: 'toggledevtools'
+      },
+      {
+        type: 'separator'
+      },
+      {
+        role: 'resetzoom'
+      },
+      {
+        role: 'zoomin'
+      },
+      {
+        role: 'zoomout'
+      },
+      {
+        type: 'separator'
+      },
+      {
+        role: 'togglefullscreen'
+      }
+    ]
+  }];
 
 
     //注册菜单 

@@ -7,22 +7,17 @@
     上传历史
     </div>
     <div class="table-responsive">
-      <table ng-controller="FileHistoryController" ui-jq="dataTable" ui-options="{
-          aaData:{{history}},
-          aoColumns: [
-            { mData: 'filename' },
-            { mData: 'download_url' },
-            { mData: 'update_time' }
-          ]
-        }" class="table table-striped m-b-none">
+      <table ng-controller="FileHistoryController" ui-jq="dataTable" ui-options="tbOptions" class="table table-striped m-b-none">
         <thead>
           <tr>
             <th  style="word-wrap: break-word;" >文件</th>
+            <th>预览</th>
             <th  style="word-wrap: break-word;" >下载地址</th>
             <th  style="word-wrap: break-word;" >更新时间</th>
           </tr>
         </thead>
         <tbody>
+      
         </tbody>
       </table>
     </div>
