@@ -45,7 +45,7 @@ angular.module('app')
           $state.go('app.form');
       }
 
-      $scope.historys = $localStorage['qn.history'].length;
+      $scope.historys = $localStorage['qn.history'] && $localStorage['qn.history'].length || 0;
 
       // save settings to local storage
       if ( angular.isDefined($localStorage.settings) ) {
