@@ -39,7 +39,6 @@ app.controller('FileUploadCtrl', ['$scope', '$http', '$localStorage','FileUpload
     $scope.authInfo = $localStorage['qn.auth'];
     uploader.onAfterAddingFile = function(fileItem) {
         var file = $scope.file = fileItem._file;
-        $scope.file;
         if (file) {
             $scope.filename = '正在上传：【' + file.name + '】';
             toaster.pop('info','提示',$scope.filename);

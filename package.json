@@ -26,6 +26,6 @@
   "dependencies": {
     "electron-packager": "^8.3.0",
     "electron-prebuilt": "^1.4.10",
-    "qiniu": "*"
+    "qiniu": "6.1.11"
   }
 }
